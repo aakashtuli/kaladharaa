@@ -979,63 +979,212 @@ var elementorFrontendConfig = {"environmentMode":{"edit":false,"wpPreview":false
 const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(window._wpemojiSettings=a,"wpEmojiSettingsSupports"),s=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const a=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===a[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,a){let r;const o=(r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),s=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(e=>{s[e]=t(o,e,n,a)}),s}function r(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}a.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),c.toString(),p.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"});const r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=e=>{i(n=e.data),r.terminate(),t(n)})}catch(e){}i(n=f(s,u,c,p))}t(n)}).then(e=>{for(const n in e)a.supports[n]=e[n],a.supports.everything=a.supports.everything&&a.supports[n],"flag"!==n&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[n]);var t;a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.supports.everything||((t=a.source||{}).concatemoji?r(t.concatemoji):t.wpemoji&&t.twemoji&&(r(t.twemoji),r(t.wpemoji)))});
 //# sourceURL=/wp-includes/js/wp-emoji-loader.min.js
 </script>
-	<script>
-	/**
-	 * Kaladharaa Static Gallery Fallback (v2)
-	 * Ensures images appear even if thumbnails are missing or JS is blocked.
-	 */
-	document.addEventListener('DOMContentLoaded', function() {
-		const galleryItems = document.querySelectorAll('.elementor-gallery-item');
-		
-		if (galleryItems.length > 0) {
-			const container = document.querySelector('.elementor-gallery__container');
-			if (container) {
-				container.style.display = 'grid';
-				container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(250px, 1fr))';
-				container.style.gap = '15px';
-				container.style.height = 'auto';
-				container.style.minHeight = '300px';
-			}
+	<!-- Premium Lightbox Slideshow Styles -->
+	<style>
+		#custom-lightbox-modal {
+			display: none;
+			position: fixed;
+			z-index: 99999;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0,0,0,0.95);
+			backdrop-filter: blur(10px);
+			-webkit-backdrop-filter: blur(10px);
+			justify-content: center;
+			align-items: center;
+			transition: opacity 0.3s ease;
 		}
 
-		galleryItems.forEach(item => {
-			const imgContainer = item.querySelector('.elementor-gallery-item__image') || item;
-			// Skip if it already has a working image
-			if (imgContainer.querySelector('img')) return;
+		.lightbox-content {
+			position: relative;
+			max-width: 90%;
+			max-height: 90%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 
-			// Priority 1: data-thumbnail attribute
-			// Priority 2: href of the parent <a> tag (original image)
-			const thumbUrl = imgContainer.getAttribute('data-thumbnail');
+		.lightbox-image {
+			max-width: 100%;
+			max-height: 85vh;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+			border-radius: 4px;
+			animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		@keyframes slideIn {
+			from { opacity: 0; transform: scale(0.95); }
+			to { opacity: 1; transform: scale(1); }
+		}
+
+		.lightbox-close {
+			position: absolute;
+			top: -40px;
+			right: 0;
+			color: #fff;
+			font-size: 35px;
+			font-weight: bold;
+			cursor: pointer;
+			transition: 0.3s;
+			opacity: 0.7;
+		}
+
+		.lightbox-close:hover { opacity: 1; }
+
+		.lightbox-prev, .lightbox-next {
+			cursor: pointer;
+			position: fixed;
+			top: 50%;
+			width: auto;
+			padding: 20px;
+			margin-top: -30px;
+			color: white;
+			font-weight: bold;
+			font-size: 30px;
+			transition: 0.3s;
+			user-select: none;
+			opacity: 0.5;
+			text-decoration: none;
+		}
+
+		.lightbox-prev { left: 20px; }
+		.lightbox-next { right: 20px; }
+		.lightbox-prev:hover, .lightbox-next:hover { opacity: 1; background-color: rgba(255,255,255,0.1); border-radius: 50%; }
+
+		@media (max-width: 768px) {
+			.lightbox-prev, .lightbox-next { padding: 10px; font-size: 20px; }
+		}
+	</style>
+
+	<!-- Lightbox Modal HTML -->
+	<div id="custom-lightbox-modal">
+		<a class="lightbox-prev" onclick="changeSlide(-1)">&#10094;</a>
+		<div class="lightbox-content">
+			<span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+			<img class="lightbox-image" id="lightbox-img" src="" alt="Slideshow">
+		</div>
+		<a class="lightbox-next" onclick="changeSlide(1)">&#10095;</a>
+	</div>
+
+	<script>
+	/**
+	 * Kaladharaa Premium Lightbox Slideshow Engine
+	 */
+	let galleryImages = [];
+	let currentSlideIndex = 0;
+	let autoPlayInterval = null;
+	const AUTO_PLAY_SPEED = 4000; // 4 seconds
+
+	document.addEventListener('DOMContentLoaded', function() {
+		const galleryItems = document.querySelectorAll('.elementor-gallery-item');
+		const container = document.querySelector('.elementor-gallery__container');
+		
+		if (container && galleryItems.length > 0) {
+			container.style.display = 'grid';
+			container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(250px, 1fr))';
+			container.style.gap = '15px';
+			container.style.height = 'auto';
+		}
+
+		galleryItems.forEach((item, index) => {
 			const originalUrl = item.getAttribute('href');
-			const finalUrl = thumbUrl || originalUrl;
+			const imgContainer = item.querySelector('.elementor-gallery-item__image') || item;
+			const thumbUrl = imgContainer.getAttribute('data-thumbnail');
+			const displayUrl = thumbUrl || originalUrl;
 
-			if (finalUrl) {
-				const img = document.createElement('img');
-				img.src = finalUrl;
-				img.alt = 'Gallery Image';
-				img.style.width = '100%';
-				img.style.height = '100%';
-				img.style.objectFit = 'cover';
-				img.style.display = 'block';
+			if (originalUrl) {
+				galleryImages.push(originalUrl);
 				
-				// Fix for broken thumbnails: Fallback to original on error
-				if (thumbUrl && originalUrl && thumbUrl !== originalUrl) {
-					img.onerror = function() {
-						this.src = originalUrl;
-						this.onerror = null; 
-					};
+				// Fix visibility and render images
+				if (!imgContainer.querySelector('img')) {
+					const img = document.createElement('img');
+					img.src = displayUrl;
+					img.style.width = '100%';
+					img.style.height = '100%';
+					img.style.objectFit = 'cover';
+					img.style.display = 'block';
+					img.onerror = () => { if (originalUrl !== displayUrl) img.src = originalUrl; };
+					
+					const content = item.querySelector('.elementor-gallery-item__content') || imgContainer;
+					content.appendChild(img);
 				}
 
-				item.style.position = 'relative';
+				// Override click to open slideshow
+				item.addEventListener('click', function(e) {
+					e.preventDefault();
+					openLightbox(index);
+				});
+
+				item.style.cursor = 'pointer';
 				item.style.opacity = '1';
 				item.style.visibility = 'visible';
 				item.style.minHeight = '200px';
-
-				const content = item.querySelector('.elementor-gallery-item__content') || imgContainer;
-				content.appendChild(img);
 			}
 		});
 	});
+
+	function openLightbox(index) {
+		currentSlideIndex = index;
+		const modal = document.getElementById('custom-lightbox-modal');
+		const img = document.getElementById('lightbox-img');
+		
+		img.src = galleryImages[currentSlideIndex];
+		modal.style.display = 'flex';
+		document.body.style.overflow = 'hidden'; // Prevent scrolling
+
+		// Start Auto-play
+		startAutoPlay();
+
+		// Keyboard listeners
+		document.addEventListener('keydown', handleKeyPress);
+	}
+
+	function closeLightbox() {
+		const modal = document.getElementById('custom-lightbox-modal');
+		modal.style.display = 'none';
+		document.body.style.overflow = 'auto';
+		
+		stopAutoPlay();
+		document.removeEventListener('keydown', handleKeyPress);
+	}
+
+	function changeSlide(n) {
+		// Reset auto-play when user manually clicks
+		stopAutoPlay();
+		
+		currentSlideIndex += n;
+		if (currentSlideIndex >= galleryImages.length) currentSlideIndex = 0;
+		if (currentSlideIndex < 0) currentSlideIndex = galleryImages.length - 1;
+		
+		const img = document.getElementById('lightbox-img');
+		img.style.opacity = '0'; // Transition effect
+		
+		setTimeout(() => {
+			img.src = galleryImages[currentSlideIndex];
+			img.style.opacity = '1';
+		}, 100);
+
+		startAutoPlay();
+	}
+
+	function startAutoPlay() {
+		stopAutoPlay();
+		autoPlayInterval = setInterval(() => {
+			changeSlide(1);
+		}, AUTO_PLAY_SPEED);
+	}
+
+	function stopAutoPlay() {
+		if (autoPlayInterval) clearInterval(autoPlayInterval);
+	}
+
+	function handleKeyPress(e) {
+		if (e.key === "ArrowRight") changeSlide(1);
+		if (e.key === "ArrowLeft") changeSlide(-1);
+		if (e.key === "Escape") closeLightbox();
+	}
 	</script>
 	</body>
 </html>
